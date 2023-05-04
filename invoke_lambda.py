@@ -1,5 +1,6 @@
 import boto3
 import json
+from utils.choose_lambda_function import choose_lambda_function
 
 # 標準入力からfirst_nameとlast_nameを取得
 first_name = input("Enter first name: ")
@@ -18,13 +19,20 @@ localstack_endpoint = 'http://localhost:4566'
 # このクライアントは、LocalStackを使用してLambda関数を実行するために使用されます。
 lambda_client = boto3.client('lambda', endpoint_url=localstack_endpoint, region_name='us-east-1')
 
+# 登録済みのLambda関数一覧を取得
+functions = lambda_client.list_functions()
+function_names = [function['FunctionName'] for function in functions['Functions']]
+
+# 関数を選択
+selected_function = choose_lambda_function(function_names)
+
 # Lambda関数を実行してeventディクショナリを渡す
 # LocalStackは、Lambda関数の実行イベントを受信し、新しい環境を開始します。
 # Dockerコンテナ用のサービスエンドポイントが作成され、関数が実行されるエグゼキュータに割り当てられます。
 # Lambda関数用のDockerコンテナが作成され、設定が適用されます。
 # Lambda関数を実行するために必要なランタイムおよび依存関係がインストールされます。
 response = lambda_client.invoke(
-    FunctionName='sample_lambda',
+    FunctionName=selected_function,
     Payload=json.dumps(event)  # eventディクショナリをJSONに変換してPayload引数に渡す
 )
 
