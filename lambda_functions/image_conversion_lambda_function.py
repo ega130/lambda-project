@@ -4,7 +4,7 @@ import os
 from PIL import Image
 from io import BytesIO
 
-s3_client = boto3.client('s3', endpoint_url='http://localhost:4566', region_name='us-east-1')
+s3_client = boto3.client('s3', endpoint_url='http://localstack:4566', region_name='us-east-1')
 
 def lambda_handler(event, context):
     # SQSメッセージからS3イベントを取得

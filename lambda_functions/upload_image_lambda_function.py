@@ -1,9 +1,9 @@
 import boto3
 import base64
 
-def lambda_handler(event, context):
-    s3_client = boto3.client('s3', endpoint_url='http://localstack:4566', region_name='us-east-1')
+s3_client = boto3.client('s3', endpoint_url='http://localstack:4566', region_name='us-east-1')
 
+def lambda_handler(event, context):
     # イベントデータからPNG画像のパスを取得
     png_image_base64 = event.get('png_image_base64')
 

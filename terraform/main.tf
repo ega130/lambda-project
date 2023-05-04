@@ -14,28 +14,6 @@ provider "aws" {
   }
 }
 
-resource "aws_s3_bucket" "upload_bucket" {
-  bucket = "my-upload-bucket"
-}
-
-resource "aws_s3_bucket" "save_bucket" {
-  bucket = "my-save-bucket"
-}
-
-resource "aws_sqs_queue" "s3_event_queue" {
-  name = "s3-event-queue"
-}
-
-resource "aws_s3_bucket_notification" "bucket_notification" {
-  bucket = aws_s3_bucket.upload_bucket.id
-
-  queue {
-    queue_arn     = aws_sqs_queue.s3_event_queue.arn
-    events        = ["s3:ObjectCreated:*"]
-    filter_suffix = ".png"
-  }
-}
-
 resource "aws_lambda_function" "full_name_lambda" {
   function_name = "full_name_lambda"
   handler       = "full_name_lambda_function.lambda_handler"
@@ -66,6 +44,28 @@ resource "aws_lambda_function" "image_conversion_lambda" {
   role = "arn:aws:iam::000000000000:role/lambda-role"
 
   filename = "image_conversion_lambda_function.zip"
+}
+
+resource "aws_s3_bucket" "upload_bucket" {
+  bucket = "my-upload-bucket"
+}
+
+resource "aws_s3_bucket" "save_bucket" {
+  bucket = "my-save-bucket"
+}
+
+resource "aws_sqs_queue" "s3_event_queue" {
+  name = "s3-event-queue"
+}
+
+resource "aws_s3_bucket_notification" "bucket_notification" {
+  bucket = aws_s3_bucket.upload_bucket.id
+
+  queue {
+    queue_arn     = aws_sqs_queue.s3_event_queue.arn
+    events        = ["s3:ObjectCreated:*"]
+    filter_suffix = ".png"
+  }
 }
 
 resource "aws_lambda_event_source_mapping" "sqs_lambda_mapping" {
