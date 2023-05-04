@@ -5,7 +5,7 @@ services:
     ports:
       - "4566:4566"
     environment:
-      - SERVICES=lambda
+      - SERVICES=lambda,sqs,s3
       - DEBUG=1
       - LAMBDA_EXECUTOR=docker
       - LAMBDA_REMOTE_DOCKER=false
