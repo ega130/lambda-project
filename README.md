@@ -9,11 +9,13 @@ $ docker-compose up -d
 2. Lambda のデプロイ
 
 ```
-$ python deploy_lambda.py
+$ sh bin/deploy_with_python.sh.sh
+or
+$ sh bin/deploy_with_terraform.sh
 ```
 
 3. Lambda の実行
 
 ```
-$ python invoke_lambda.py
+$ sh bin/invoke.sh
 ```
