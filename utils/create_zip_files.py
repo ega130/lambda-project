@@ -8,8 +8,13 @@ lambda_function_dir = f'./{constants.LAMBDA_FUNCTION_DIR}'
 zip_dir = f'./{constants.ZIP_DIR}'
 
 if os.path.exists(zip_dir):
-  shutil.rmtree(zip_dir)
-os.makedirs(zip_dir)
+  # ZIPファイルだけを削除
+  for file_name in os.listdir(zip_dir):
+      if file_name.endswith('.zip'):
+          file_path = os.path.join(zip_dir, file_name)
+          os.remove(file_path)
+else:
+  os.makedirs(zip_dir)
 
 # lambda_functionsディレクトリ内のすべての.pyファイルを検索
 for file_name in os.listdir(lambda_function_dir):

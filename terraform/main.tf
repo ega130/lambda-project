@@ -36,40 +36,22 @@ resource "aws_s3_bucket_notification" "bucket_notification" {
   }
 }
 
-resource "aws_iam_role" "lambda_role" {
-  name = "sample_lambda_role"
-
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Action = "sts:AssumeRole"
-        Effect = "Allow"
-        Principal = {
-          Service = "lambda.amazonaws.com"
-        }
-      }
-    ]
-  })
-}
-
 resource "aws_lambda_function" "full_name_lambda" {
   function_name = "full_name_lambda"
-  handler       = "lambda_function.lambda_handler"
+  handler       = "full_name_lambda_function.lambda_handler"
   runtime       = "python3.8"
 
-  role = aws_iam_role.lambda_role.arn
+  role = "arn:aws:iam::000000000000:role/lambda-role"
 
   filename = "full_name_lambda_function.zip"
 }
 
-
 resource "aws_lambda_function" "image_conversion_lambda" {
   function_name = "image_conversion_lambda"
-  handler       = "lambda_function.lambda_handler"
+  handler       = "image_conversion_lambda_function.lambda_handler"
   runtime       = "python3.8"
 
-  role = aws_iam_role.lambda_role.arn
+  role = "arn:aws:iam::000000000000:role/lambda-role"
 
   filename = "image_conversion_lambda_function.zip"
 }
