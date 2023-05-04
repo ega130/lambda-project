@@ -13,12 +13,12 @@ create_zip_file(zip_file_name, 'lambda_function.py')
 # LocalStackのエンドポイントを指定
 localstack_endpoint = 'http://localhost:4566'
 
-# Lambdaクライアントを作成
+# Lambdaクライアントを作成 (LocalStackがAWS Lambdaサービスのエミュレーションを開始)
 lambda_client = boto3.client('lambda', endpoint_url=localstack_endpoint, region_name='us-east-1')
 
 function_name = 'sample_lambda'
 
-# 関数がすでに存在するかどうかを確認
+# 関数がすでに存在するかどうかを確認 (lambda.GetFunctionリクエストが送信され、関数が存在しないことが確認されます)
 try:
     lambda_client.get_function(FunctionName=function_name)
     function_exists = True
@@ -32,15 +32,16 @@ if function_exists:
         ZipFile=open('lambda_function.zip', 'rb').read(),
     )
 else:
+    # Lambda関数が作成されます (lambda.CreateFunctionリクエストが送信され、新しいLambda関数が作成されます)
     response = lambda_client.create_function(
         FunctionName=function_name,
         Runtime='python3.8',
-        Role='arn:aws:iam::000000000000:role/lambda-role',
+        Role='arn:aws:iam::000000000000:role/lambda-role', # sts.AssumeRoleリクエストが送信され、ロールの権限が取得されます
         Handler='lambda_function.lambda_handler',
-        Code={'ZipFile': open('lambda_function.zip', 'rb').read()},
+        Code={'ZipFile': open('lambda_function.zip', 'rb').read()}, # s3.CreateBucketリクエストが送信され、内部的にS3バケットが作成されます。s3.PutObjectリクエストが送信され、Lambda関数のコードがS3バケットに保存されます
     )
 
-# Lambda関数がActive状態になるまで待機
+# Lambda関数がActive状態になるまで待機 (Lambda関数のコードがディスクに保存され、Dockerイメージがプルされます。Lambda関数がアクティブ状態になります)
 while True:
     response = lambda_client.get_function(FunctionName=function_name)
     if response['Configuration']['State'] == 'Active':
