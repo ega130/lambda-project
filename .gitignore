@@ -6,3 +6,5 @@ lambda_function.zip
 terraform.tfstate
 
 terraform.tfstate.backup
+
+__pycache__
