@@ -1,14 +1,5 @@
 import boto3
 import time
-import zipfile
-
-# lambda_function.pyをZIPファイルに圧縮
-def create_zip_file(zip_name, file_name):
-    with zipfile.ZipFile(zip_name, 'w', zipfile.ZIP_DEFLATED) as zipf:
-        zipf.write(file_name)
-
-zip_file_name = 'lambda_function.zip'
-create_zip_file(zip_file_name, 'lambda_function.py')
 
 # LocalStackのエンドポイントを指定
 localstack_endpoint = 'http://localhost:4566'

@@ -1,4 +1,4 @@
 #!/bin/bash
 
-zip lambda_function.zip lambda_function.py
+python utils/create_zip_files.py
 terraform apply -auto-approve
