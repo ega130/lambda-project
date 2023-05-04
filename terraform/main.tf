@@ -46,6 +46,18 @@ resource "aws_lambda_function" "full_name_lambda" {
   filename = "full_name_lambda_function.zip"
 }
 
+resource "aws_lambda_function" "upload_image_lambda" {
+  function_name = "upload_image_lambda"
+  handler       = "upload_image_lambda_function.lambda_handler"
+  runtime       = "python3.8"
+
+  role = "arn:aws:iam::000000000000:role/lambda-role"
+
+  filename = "upload_image_lambda_function.zip"
+
+  timeout = 30
+}
+
 resource "aws_lambda_function" "image_conversion_lambda" {
   function_name = "image_conversion_lambda"
   handler       = "image_conversion_lambda_function.lambda_handler"
